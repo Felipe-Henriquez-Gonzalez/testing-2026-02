@@ -1,0 +1,30 @@
+---
+- name: Listen for events on a webhook from chatops
+  hosts: all
+  sources:
+    - name: Listen for alerts from Dynatrace
+      eda.builtin.webhook:
+        host: 0.0.0.0
+        port: 7022
+
+  rules:
+    - name: Ejecutar workflow cuando action sea recuperar
+      condition: event.action == "recuperar"
+      action:
+        run_workflow_template:
+          name: "recuperar"
+          organization: "Default"
+    - name: Lanzar workflow recuperar cuando llegue action resolver
+      condition: event.action == "resolver"
+      action:
+        run_workflow_template:
+          name: "resolver"
+          organization: "Default"
+    - name: Lanzar workflow mas info
+      condition: event.action == "mas-info"
+      action:
+        run_workflow_template:
+          name: "mas-info"
+          organization: "Default"
+
+    
